@@ -55,10 +55,14 @@ func (a *javaLibraryAnalyzer) PostAnalyze(ctx context.Context, input analyzer.Po
 		return nil, nil
 	}
 
-	// It will be called on each JAR file
+	// It will be called on each JAR file.
+	// Always compute the SHA-1 digest for JAR files: it is a stable artifact
+	// identity that downstream consumers rely on (Maven Central canonicalization,
+	// tamper detection, cross-tool dedup), and unlike other language analyzers
+	// the JAR analyzer hashes the binary artifact itself rather than a manifest.
 	onFile := func(path string, info fs.FileInfo, r xio.ReadSeekerAt) (*types.Application, error) {
 		p := jar.NewParser(client, jar.WithSize(info.Size()), jar.WithFilePath(path))
-		return language.ParsePackage(ctx, types.Jar, path, r, p, input.Options.FileChecksum)
+		return language.ParsePackage(ctx, types.Jar, path, r, p, true)
 	}
 
 	var apps []types.Application

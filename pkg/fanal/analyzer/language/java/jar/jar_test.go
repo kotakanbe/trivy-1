@@ -19,10 +19,9 @@ import (
 
 func Test_javaLibraryAnalyzer_Analyze(t *testing.T) {
 	tests := []struct {
-		name            string
-		inputFile       string
-		includeChecksum bool
-		want            *analyzer.AnalysisResult
+		name      string
+		inputFile string
+		want      *analyzer.AnalysisResult
 	}{
 		{
 			name:      "happy path (WAR file)",
@@ -37,41 +36,49 @@ func Test_javaLibraryAnalyzer_Analyze(t *testing.T) {
 								Name:     "org.glassfish:javax.el",
 								FilePath: "testdata/test.war/WEB-INF/lib/javax.el-3.0.0.jar",
 								Version:  "3.0.0",
+								Digest:   "sha1:29c4d2a08ad0f20ed975e4168381a61b2203f3c5",
 							},
 							{
 								Name:     "com.fasterxml.jackson.core:jackson-databind",
 								FilePath: "testdata/test.war/WEB-INF/lib/jackson-databind-2.9.10.6.jar",
 								Version:  "2.9.10.6",
+								Digest:   "sha1:29c4d2a08ad0f20ed975e4168381a61b2203f3c5",
 							},
 							{
 								Name:     "com.fasterxml.jackson.core:jackson-annotations",
 								FilePath: "testdata/test.war/WEB-INF/lib/jackson-annotations-2.9.10.jar",
 								Version:  "2.9.10",
+								Digest:   "sha1:29c4d2a08ad0f20ed975e4168381a61b2203f3c5",
 							},
 							{
 								Name:     "com.fasterxml.jackson.core:jackson-core",
 								FilePath: "testdata/test.war/WEB-INF/lib/jackson-core-2.9.10.jar",
 								Version:  "2.9.10",
+								Digest:   "sha1:29c4d2a08ad0f20ed975e4168381a61b2203f3c5",
 							},
 							{
 								Name:     "org.slf4j:slf4j-api",
 								FilePath: "testdata/test.war/WEB-INF/lib/slf4j-api-1.7.30.jar",
 								Version:  "1.7.30",
+								Digest:   "sha1:29c4d2a08ad0f20ed975e4168381a61b2203f3c5",
 							},
 							{
 								Name:     "com.cronutils:cron-utils",
 								FilePath: "testdata/test.war/WEB-INF/lib/cron-utils-9.1.2.jar",
 								Version:  "9.1.2",
+								Digest:   "sha1:29c4d2a08ad0f20ed975e4168381a61b2203f3c5",
 							},
 							{
 								Name:     "org.apache.commons:commons-lang3",
 								FilePath: "testdata/test.war/WEB-INF/lib/commons-lang3-3.11.jar",
 								Version:  "3.11",
+								Digest:   "sha1:29c4d2a08ad0f20ed975e4168381a61b2203f3c5",
 							},
 							{
 								Name:     "com.example:web-app",
 								FilePath: "testdata/test.war",
 								Version:  "1.0-SNAPSHOT",
+								Digest:   "sha1:29c4d2a08ad0f20ed975e4168381a61b2203f3c5",
 							},
 						},
 					},
@@ -79,9 +86,8 @@ func Test_javaLibraryAnalyzer_Analyze(t *testing.T) {
 			},
 		},
 		{
-			name:            "happy path (PAR file)",
-			inputFile:       "testdata/test.par",
-			includeChecksum: true,
+			name:      "happy path (PAR file)",
+			inputFile: "testdata/test.par",
 			want: &analyzer.AnalysisResult{
 				Applications: []types.Application{
 					{
@@ -112,6 +118,7 @@ func Test_javaLibraryAnalyzer_Analyze(t *testing.T) {
 								Name:     "org.apache.tomcat.embed:tomcat-embed-websocket",
 								FilePath: "testdata/test.jar",
 								Version:  "9.0.65",
+								Digest:   "sha1:bd70dfeb39cc83c6934be24fa377b21e541dbe76",
 							},
 						},
 					},
@@ -141,8 +148,7 @@ func Test_javaLibraryAnalyzer_Analyze(t *testing.T) {
 			require.NoError(t, err)
 
 			got, err := a.PostAnalyze(ctx, analyzer.PostAnalysisInput{
-				FS:      mfs,
-				Options: analyzer.AnalysisOptions{FileChecksum: tt.includeChecksum},
+				FS: mfs,
 			})
 
 			require.NoError(t, err)
